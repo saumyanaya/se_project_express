@@ -16,6 +16,6 @@ Hot Reload SE Project Express uses nodemon to enable hot reloading, or the abili
 
 `npm run dev` — to launch the server with the hot reload feature
 
-### Testing
+# Plans for Improvement
 
-Before committing your code, make sure you edit the file `sprint.txt` in the root folder. The file `sprint.txt` should contain the number of the sprint you're currently working on. For ex. 12
+The eventual goal is to create a server with an API and user authorization. It's also be great to add additional clarity in server responses so the user is especially clear on what the probilem is and what their next steps are.

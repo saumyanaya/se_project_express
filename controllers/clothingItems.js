@@ -1,5 +1,5 @@
 const ClothingItem = require("../models/clothingItem");
-const { OK, CREATED } = require("../utils/errors");
+const { FORBIDDEN, OK, CREATED } = require("../utils/errors");
 const { handleItemHttpError } = require("../utils/errorHandlers");
 
 function getItems(req, res) {
@@ -16,7 +16,7 @@ function createItem(req, res) {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
 
-  ClothingItem.create({ name, weather, imageUrl, owner })
+  ClothingItem.create({ name, weather, imageUrl, owner, likes })
     .then((item) => {
       res.status(CREATED).send({ data: item });
     })
@@ -29,7 +29,7 @@ function deleteItem(req, res) {
   ClothingItem.findByIdAndRemove(req.params.itemId)
     .orFail()
     .then((item) => {
-      res.status(OK).send(item);
+      res.status(FORBIDDEN).send(item);
     })
     .catch((err) => {
       handleItemHttpError(req, res, err);
