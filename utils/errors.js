@@ -4,7 +4,7 @@ const INTERNAL_SERVER_ERROR = 500;
 const OK = 200;
 const CREATED = 201;
 const FORBIDDEN = 403;
-const DUPLICATES = 409;
+const CONFLICT = 409;
 const UNAUTHORIZED = 401;
 
 module.exports = {
@@ -14,6 +14,6 @@ module.exports = {
   OK,
   CREATED,
   FORBIDDEN,
-  DUPLICATES,
+  CONFLICT,
   UNAUTHORIZED,
 };

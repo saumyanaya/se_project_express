@@ -1,8 +1,18 @@
-const { NOT_FOUND, BAD_REQUEST, INTERNAL_SERVER_ERROR } = require("./errors");
+const {
+  NOT_FOUND,
+  BAD_REQUEST,
+  INTERNAL_SERVER_ERROR,
+  FORBIDDEN,
+} = require("./errors");
 
 function handleUserHttpError(req, res, err) {
   console.error(err);
   switch (err.name) {
+    case "Request Refuse":
+      res
+        .status(FORBIDDEN)
+        .send({ message: "the item is owned by other user" });
+      break;
     case "DocumentNotFoundError":
       res
         .status(NOT_FOUND)
@@ -27,6 +37,11 @@ function handleUserHttpError(req, res, err) {
 function handleItemHttpError(req, res, err) {
   console.error(err);
   switch (err.name) {
+    case "Request Refuse":
+      res
+        .status(FORBIDDEN)
+        .send({ message: "the item is owned by other user" });
+      break;
     case "DocumentNotFoundError":
       res
         .status(NOT_FOUND)

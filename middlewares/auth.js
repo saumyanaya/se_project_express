@@ -1,6 +1,7 @@
 // middleware/auth.js
 
 const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../utils/config");
 const { UNAUTHORIZED } = require("../utils/errors");
 
 module.exports = (req, res, next) => {
@@ -14,9 +15,9 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, "JWT_SECRET");
+    payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    return res.status(UNAUTHORIZED).send({ message: "Authorization Required" });
+    return res.status(UNAUTHORIZED).send({ message: "Forbidden Access" });
   }
 
   req.user = payload; // assigning the payload to the request object
