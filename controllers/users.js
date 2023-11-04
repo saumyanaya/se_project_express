@@ -55,7 +55,7 @@ const loginUser = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      handleError(req, res, err);
+      handleUserHttpError(req, res, err);
     });
 };
 

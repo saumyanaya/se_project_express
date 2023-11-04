@@ -3,10 +3,12 @@ const {
   BAD_REQUEST,
   INTERNAL_SERVER_ERROR,
   FORBIDDEN,
+  CONFLICT,
 } = require("./errors");
 
 function handleUserHttpError(req, res, err) {
   console.error(err);
+
   switch (err.name) {
     case "Request Refuse":
       res
@@ -26,6 +28,15 @@ function handleUserHttpError(req, res, err) {
         .status(BAD_REQUEST)
         .send({ message: "id is incorrect format or information is missing" });
       break;
+    case "Error":
+      res.status(BAD_REQUEST).send({ message: err.message });
+      break;
+    case "MongoServerError":
+      console.log(" code is : " + err.code);
+      if (err.code === 11000) {
+        res.status(CONFLICT).send({ message: "duplicate email id" });
+        break;
+      }
     default:
       res
         .status(INTERNAL_SERVER_ERROR)
