@@ -33,16 +33,18 @@ const createUser = (req, res) => {
   );
 };
 
-function getUser(req, res) {
-  User.findById(req.params._id)
+const getUser = (req, res) => {
+  const userId = req.user._id;
+  User.findById(userId)
     .orFail()
     .then((user) => {
-      res.status(OK).send(user);
+      res.send({ user });
     })
     .catch((err) => {
+      console.error(err);
       handleUserHttpError(req, res, err);
     });
-}
+};
 
 //LoginUser
 const loginUser = (req, res) => {
@@ -59,58 +61,29 @@ const loginUser = (req, res) => {
     });
 };
 
-// const loginUser = (req, res) => {
-//   const { email, password } = req.body;
-//   User.findUserByCredentials(email, password)
-//     .then((user) => {
-//       const token = jwt.sign(
-//         { _id: user._id },
-//         JWT_SECRET,
-//         { expiresIn: "7d" }, // this token will expire an hour after creation
-//       );
-//       res.send({ token });
-//       if (!user) {
-//         return Promise.reject(new Error("Incorrect email or password"));
-//       }
-
-//       return bcrypt.compare(password, user.password);
-//     })
-//     .then((matched) => {
-//       if (!matched) {
-//         // the hashes didn't match, rejecting the promise
-//         return Promise.reject(new Error("Incorrect email or password"));
-//       }
-
-//       // authentication successful
-//       res.send({ message: "Everything good!" });
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//       res.status(UNAUTHORIZED).send({ message: err.message });
-//     });
-// };
-
-//updateUser
-
 const updateUser = (req, res) => {
-  const { name, avatar } = req.body;
-
-  const userId = req.user._id;
-
-  User.findByIdAndUpdate(
-    userId,
-    { name, avatar },
-    { new: true, runValidators: true },
-  )
+  User.findByIdAndUpdate(req.user._id, req.body, {
+    new: true,
+    runValidators: true,
+  })
+    .orFail()
     .then((user) => {
-      res.send({ data: user });
+      if (!user) {
+        return res
+          .status(404)
+          .send({ message: "Requested Resource Not Found" });
+      }
+      return res.send({ user });
     })
     .catch((err) => {
       console.error(err);
-      handleUserHttpError(req, res, err);
+      if (err.message === "Incorrect email or password") {
+        res.status(400).send({ message: "Incorrect email or password" });
+      } else {
+        handleUserHttpError(req, res, err);
+      }
     });
 };
-
 module.exports = {
   createUser,
   loginUser,

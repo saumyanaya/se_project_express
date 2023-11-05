@@ -1,5 +1,5 @@
 const ClothingItem = require("../models/clothingItem");
-const { OK, CREATED } = require("../utils/errors");
+const { OK, CREATED, FORBIDDEN } = require("../utils/errors");
 const { handleItemHttpError } = require("../utils/errorHandlers");
 
 function getItems(req, res) {
@@ -32,15 +32,18 @@ const deleteItem = (req, res) => {
     .orFail()
     .then((item) => {
       if (String(item.owner) !== req.user._id) {
-        return Promise.reject(new Error("Cannot delete another user's item"));
+        throw new Error("Forbidden Access");
       }
       ClothingItem.findByIdAndDelete(item._id).then(() => {
         res.status(OK).send({ message: "Item deleted" });
       });
     })
     .catch((err) => {
-      console.error(err);
+      //if (err.message === "Forbidden Access") {
+      //  res.status(FORBIDDEN).send({ message: "Forbidden Access" });
+      //} else {
       handleItemHttpError(req, res, err);
+      //}
     });
 };
 

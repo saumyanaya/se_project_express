@@ -7,8 +7,6 @@ const {
 } = require("./errors");
 
 function handleUserHttpError(req, res, err) {
-  console.error(err);
-
   switch (err.name) {
     case "Request Refuse":
       res
@@ -46,7 +44,6 @@ function handleUserHttpError(req, res, err) {
 }
 
 function handleItemHttpError(req, res, err) {
-  console.error(err);
   switch (err.name) {
     case "Request Refuse":
       res
@@ -66,6 +63,13 @@ function handleItemHttpError(req, res, err) {
         .status(BAD_REQUEST)
         .send({ message: "id is incorrect format, or information is missing" });
       break;
+    case "Error":
+      if (err.message === "Forbidden Access") {
+        res.status(FORBIDDEN).send({
+          message: "Forbidden Access",
+        });
+        break;
+      }
     default:
       res
         .status(INTERNAL_SERVER_ERROR)
