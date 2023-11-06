@@ -1,8 +1,8 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const { OK, BAD_REQUEST } = require("../utils/errors");
-const { handleError } = require("../utils/errorHandlers");
+const { OK, NOT_FOUND } = require("../utils/errors");
+const { handleUserHttpError } = require("../utils/errorHandlers");
 const { JWT_SECRET } = require("../utils/config");
 
 const createUser = (req, res) => {
@@ -16,7 +16,7 @@ const createUser = (req, res) => {
         res.status(OK).send({ userData });
       })
       .catch((err) => {
-        handleError(req, res, err);
+        handleUserHttpError(req, res, err);
       }),
   );
 };
@@ -29,11 +29,18 @@ const getUser = (req, res) => {
       res.send({ user });
     })
     .catch((err) => {
-      handleError(req, res, err);
+      handleUserHttpError(req, res, err);
     });
 };
 
 const loginUser = (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res
+      .status(400)
+      .send({ message: "Email and password are required." });
+  }
   User.findUserByCredentials(req.body.email, req.body.password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
@@ -42,7 +49,8 @@ const loginUser = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      handleError(req, res, err);
+      console.log(err);
+      handleUserHttpError(req, res, err);
     });
 };
 
@@ -60,7 +68,7 @@ const updateUser = (req, res) => {
       return res.send({ user });
     })
     .catch((err) => {
-      handleError(req, res, err);
+      handleUserHttpError(req, res, err);
     });
 };
 

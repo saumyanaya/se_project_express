@@ -1,6 +1,6 @@
 const ClothingItem = require("../models/clothingItem");
 const { OK, CREATED } = require("../utils/errors");
-const { handleError } = require("../utils/errorHandlers");
+const { handleItemHttpError } = require("../utils/errorHandlers");
 
 function getItems(req, res) {
   ClothingItem.find({})
@@ -8,7 +8,7 @@ function getItems(req, res) {
       res.status(OK).send(items);
     })
     .catch((err) => {
-      handleError(req, res, err);
+      handleItemHttpError(req, res, err);
     });
 }
 
@@ -21,7 +21,7 @@ function createItem(req, res) {
       res.status(CREATED).send({ data: item });
     })
     .catch((err) => {
-      handleError(req, res, err);
+      handleItemHttpError(req, res, err);
     });
 }
 
@@ -34,12 +34,16 @@ const deleteItem = (req, res) => {
       if (String(item.owner) !== req.user._id) {
         throw new Error("Forbidden Access");
       }
-      ClothingItem.findByIdAndDelete(item._id).then(() => {
-        res.status(OK).send({ message: "Item deleted" });
-      });
+      ClothingItem.findByIdAndDelete(item._id)
+        .then(() => {
+          res.status(OK).send({ message: "Item deleted" });
+        })
+        .catch((err) => {
+          handleItemHttpError(req, res, err);
+        });
     })
     .catch((err) => {
-      handleError(req, res, err);
+      handleItemHttpError(req, res, err);
     });
 };
 
@@ -54,7 +58,7 @@ function likeItem(req, res) {
       res.status(OK).send(like);
     })
     .catch((err) => {
-      handleError(req, res, err);
+      handleItemHttpError(req, res, err);
     });
 }
 
@@ -69,7 +73,7 @@ function dislikeItem(req, res) {
       res.status(OK).send(dislike);
     })
     .catch((err) => {
-      handleError(req, res, err);
+      handleItemHttpError(req, res, err);
     });
 }
 
