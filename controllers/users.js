@@ -1,20 +1,9 @@
-const User = require("../models/user");
-const { OK } = require("../utils/errors");
-const { handleUserHttpError } = require("../utils/errorHandlers");
-const { JWT_SECRET } = require("../utils/config");
-const bcrypt = require("bcryptjs"); // importing bcrypt
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-// const mongoose = require("mongoose");
-
-function getUsers(req, res) {
-  User.find({})
-    .then((users) => {
-      res.status(OK).send(users);
-    })
-    .catch((err) => {
-      handleUserHttpError(req, res, err);
-    });
-}
+const User = require("../models/user");
+const { OK, BAD_REQUEST } = require("../utils/errors");
+const { handleError } = require("../utils/errorHandlers");
+const { JWT_SECRET } = require("../utils/config");
 
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
@@ -27,8 +16,7 @@ const createUser = (req, res) => {
         res.status(OK).send({ userData });
       })
       .catch((err) => {
-        console.error(err);
-        handleUserHttpError(req, res, err);
+        handleError(req, res, err);
       }),
   );
 };
@@ -41,12 +29,10 @@ const getUser = (req, res) => {
       res.send({ user });
     })
     .catch((err) => {
-      console.error(err);
-      handleUserHttpError(req, res, err);
+      handleError(req, res, err);
     });
 };
 
-//LoginUser
 const loginUser = (req, res) => {
   User.findUserByCredentials(req.body.email, req.body.password)
     .then((user) => {
@@ -56,38 +42,31 @@ const loginUser = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      console.error(err);
-      handleUserHttpError(req, res, err);
+      handleError(req, res, err);
     });
 };
 
 const updateUser = (req, res) => {
-  User.findByIdAndUpdate(req.user._id, req.body, {
-    new: true,
-    runValidators: true,
-  })
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name: req.body.name, avatar: req.body.avatar },
+    {
+      new: true,
+      runValidators: true,
+    },
+  )
     .orFail()
     .then((user) => {
-      if (!user) {
-        return res
-          .status(404)
-          .send({ message: "Requested Resource Not Found" });
-      }
       return res.send({ user });
     })
     .catch((err) => {
-      console.error(err);
-      if (err.message === "Incorrect email or password") {
-        res.status(400).send({ message: "Incorrect email or password" });
-      } else {
-        handleUserHttpError(req, res, err);
-      }
+      handleError(req, res, err);
     });
 };
+
 module.exports = {
   createUser,
   loginUser,
   getUser,
-  getUsers,
   updateUser,
 };

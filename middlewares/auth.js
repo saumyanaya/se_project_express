@@ -17,11 +17,9 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    console.error(err);
     return res.status(UNAUTHORIZED).send({ message: "Forbidden Access" });
   }
 
-  req.user = payload; // assigning the payload to the request object
-
-  return next(); // sending the request to the next middleware
+  req.user = payload;
+  return next();
 };

@@ -1,6 +1,6 @@
 const ClothingItem = require("../models/clothingItem");
-const { OK, CREATED, FORBIDDEN } = require("../utils/errors");
-const { handleItemHttpError } = require("../utils/errorHandlers");
+const { OK, CREATED } = require("../utils/errors");
+const { handleError } = require("../utils/errorHandlers");
 
 function getItems(req, res) {
   ClothingItem.find({})
@@ -8,7 +8,7 @@ function getItems(req, res) {
       res.status(OK).send(items);
     })
     .catch((err) => {
-      handleItemHttpError(req, res, err);
+      handleError(req, res, err);
     });
 }
 
@@ -21,7 +21,7 @@ function createItem(req, res) {
       res.status(CREATED).send({ data: item });
     })
     .catch((err) => {
-      handleItemHttpError(req, res, err);
+      handleError(req, res, err);
     });
 }
 
@@ -39,11 +39,7 @@ const deleteItem = (req, res) => {
       });
     })
     .catch((err) => {
-      //if (err.message === "Forbidden Access") {
-      //  res.status(FORBIDDEN).send({ message: "Forbidden Access" });
-      //} else {
-      handleItemHttpError(req, res, err);
-      //}
+      handleError(req, res, err);
     });
 };
 
@@ -58,7 +54,7 @@ function likeItem(req, res) {
       res.status(OK).send(like);
     })
     .catch((err) => {
-      handleItemHttpError(req, res, err);
+      handleError(req, res, err);
     });
 }
 
@@ -73,7 +69,7 @@ function dislikeItem(req, res) {
       res.status(OK).send(dislike);
     })
     .catch((err) => {
-      handleItemHttpError(req, res, err);
+      handleError(req, res, err);
     });
 }
 
