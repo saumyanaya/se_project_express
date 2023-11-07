@@ -25,6 +25,4 @@ app.post("/signup", createUser);
 
 app.use(routes);
 
-app.listen(PORT, () => {
-  //console.log(`App listening at port ${PORT}`);
-});
+app.listen(PORT, () => {});

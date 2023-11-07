@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const { OK, NOT_FOUND } = require("../utils/errors");
+const { OK } = require("../utils/errors");
 const { handleUserHttpError } = require("../utils/errorHandlers");
 const { JWT_SECRET } = require("../utils/config");
 
@@ -49,7 +49,6 @@ const loginUser = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      console.log(err);
       handleUserHttpError(req, res, err);
     });
 };
@@ -57,7 +56,8 @@ const loginUser = (req, res) => {
 const updateUser = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
-    { name: req.body.name, avatar: req.body.avatar },
+    req.body,
+    // { name: req.body.name, avatar: req.body.avatar },
     {
       new: true,
       runValidators: true,
