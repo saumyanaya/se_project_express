@@ -34,7 +34,7 @@ function handleUserHttpError(req, res, err) {
         .send({ message: "id is incorrect format or information is missing" });
       break;
     case "Error":
-      res.status(UNAUTHORIZED).send("Incorrect email or password");
+      res.status(UNAUTHORIZED).send({ message: "Incorrect email or password" });
       break;
     default:
       res
