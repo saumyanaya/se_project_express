@@ -9,6 +9,12 @@ const {
 
 function handleUserHttpError(req, res, err) {
   switch (err.name) {
+    case "MongoServerError":
+      if (err.code === 11000) {
+        res.status(CONFLICT).send({ message: "duplicate email id" });
+      }
+      break;
+
     case "Request Refuse":
       res
         .status(FORBIDDEN)
@@ -16,8 +22,8 @@ function handleUserHttpError(req, res, err) {
       break;
     case "DocumentNotFoundError":
       res
-        .status(UNAUTHORIZED)
-        .send({ message: `user ${req.body.email} couldn't be found` });
+        .status(NOT_FOUND)
+        .send({ message: `user id ${req.params.id} couldn't be found` });
       break;
     case "CastError":
       res.status(BAD_REQUEST).send({ message: "id is incorrect format" });
@@ -28,14 +34,8 @@ function handleUserHttpError(req, res, err) {
         .send({ message: "id is incorrect format or information is missing" });
       break;
     case "Error":
-      res.status(BAD_REQUEST).send("Incorrect email or password");
+      res.status(UNAUTHORIZED).send("Incorrect email or password");
       break;
-    case "MongoServerError":
-      if (err.code === 11000) {
-        res.status(CONFLICT).send({ message: "duplicate email id" });
-        break;
-      }
-
     default:
       res
         .status(INTERNAL_SERVER_ERROR)
@@ -69,8 +69,9 @@ function handleItemHttpError(req, res, err) {
         res.status(FORBIDDEN).send({
           message: "Forbidden Access",
         });
-        break;
       }
+      break;
+
     default:
       res
         .status(INTERNAL_SERVER_ERROR)

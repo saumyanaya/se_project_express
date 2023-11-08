@@ -34,13 +34,6 @@ const getUser = (req, res) => {
 };
 
 const loginUser = (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res
-      .status(400)
-      .send({ message: "Email and password are required." });
-  }
   User.findUserByCredentials(req.body.email, req.body.password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
@@ -56,16 +49,14 @@ const loginUser = (req, res) => {
 const updateUser = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
-    req.body,
-    // { name: req.body.name, avatar: req.body.avatar },
+    { name: req.body.name, avatar: req.body.avatar },
     {
       new: true,
       runValidators: true,
     },
   )
-    .orFail()
     .then((user) => {
-      return res.send({ user });
+      res.send({ user });
     })
     .catch((err) => {
       handleUserHttpError(req, res, err);
