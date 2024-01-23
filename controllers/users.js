@@ -5,7 +5,7 @@ const { OK } = require("../utils/errors");
 const { handleUserHttpError } = require("../utils/errorHandlers");
 const { JWT_SECRET } = require("../utils/config");
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
 
   bcrypt.hash(password, 10).then((hash) =>
@@ -16,12 +16,12 @@ const createUser = (req, res) => {
         res.status(OK).send({ userData });
       })
       .catch((err) => {
-        handleUserHttpError(req, res, err);
+        handleUserHttpError(req, res, next(err));
       }),
   );
 };
 
-const getUser = (req, res) => {
+const getUser = (req, res, next) => {
   const userId = req.user._id;
   User.findById(userId)
     .orFail()
@@ -29,11 +29,11 @@ const getUser = (req, res) => {
       res.send({ user });
     })
     .catch((err) => {
-      handleUserHttpError(req, res, err);
+      handleUserHttpError(req, res, next(err));
     });
 };
 
-const loginUser = (req, res) => {
+const loginUser = (req, res, next) => {
   User.findUserByCredentials(req.body.email, req.body.password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
@@ -42,11 +42,11 @@ const loginUser = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      handleUserHttpError(req, res, err);
+      handleUserHttpError(req, res, next(err));
     });
 };
 
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name: req.body.name, avatar: req.body.avatar },
@@ -59,7 +59,7 @@ const updateUser = (req, res) => {
       res.send({ user });
     })
     .catch((err) => {
-      handleUserHttpError(req, res, err);
+      handleUserHttpError(req, res, next(err));
     });
 };
 

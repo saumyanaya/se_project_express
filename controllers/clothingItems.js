@@ -2,17 +2,17 @@ const ClothingItem = require("../models/clothingItem");
 const { OK, CREATED } = require("../utils/errors");
 const { handleItemHttpError } = require("../utils/errorHandlers");
 
-function getItems(req, res) {
+function getItems(req, res, next) {
   ClothingItem.find({})
     .then((items) => {
       res.status(OK).send(items);
     })
     .catch((err) => {
-      handleItemHttpError(req, res, err);
+      handleItemHttpError(req, res, next(err));
     });
 }
 
-function createItem(req, res) {
+function createItem(req, res, next) {
   const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
 
@@ -21,11 +21,11 @@ function createItem(req, res) {
       res.status(CREATED).send({ data: item });
     })
     .catch((err) => {
-      handleItemHttpError(req, res, err);
+      handleItemHttpError(req, res, next(err));
     });
 }
 
-const deleteItem = (req, res) => {
+const deleteItem = (req, res, next) => {
   const { itemId } = req.params;
 
   ClothingItem.findById(itemId)
@@ -39,15 +39,15 @@ const deleteItem = (req, res) => {
           res.status(OK).send({ message: "Item deleted" });
         })
         .catch((err) => {
-          handleItemHttpError(req, res, err);
+          handleItemHttpError(req, res, next(err));
         });
     })
     .catch((err) => {
-      handleItemHttpError(req, res, err);
+      handleItemHttpError(req, res, next(err));
     });
 };
 
-function likeItem(req, res) {
+function likeItem(req, res, next) {
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
     { $addToSet: { likes: req.user._id } },
@@ -58,11 +58,11 @@ function likeItem(req, res) {
       res.status(OK).send(like);
     })
     .catch((err) => {
-      handleItemHttpError(req, res, err);
+      handleItemHttpError(req, res, next(err));
     });
 }
 
-function dislikeItem(req, res) {
+function dislikeItem(req, res, next) {
   ClothingItem.findByIdAndUpdate(
     req.params.itemId,
     { $pull: { likes: req.user._id } },
@@ -73,7 +73,7 @@ function dislikeItem(req, res) {
       res.status(OK).send(dislike);
     })
     .catch((err) => {
-      handleItemHttpError(req, res, err);
+      handleItemHttpError(req, res, next(err));
     });
 }
 
