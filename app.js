@@ -2,9 +2,9 @@ const express = require("express");
 
 // app.js
 
-require("dotenv").config();
+// require("dotenv").config();
 
-console.log(process.env.NODE_ENV); // production
+// console.log(process.env.NODE_ENV); // production
 
 const { PORT = 3001 } = process.env;
 
@@ -18,11 +18,11 @@ const { errors } = require("celebrate");
 
 const { requestLogger, errorLogger } = require("./middlewares/logger");
 
-// app.get("/crash-test", () => {
-//   setTimeout(() => {
-//     throw new Error("Server will crash now");
-//   }, 0);
-// });
+app.get("/crash-test", () => {
+  setTimeout(() => {
+    throw new Error("Server will crash now");
+  }, 0);
+});
 
 const cors = require("cors");
 

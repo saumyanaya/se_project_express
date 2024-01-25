@@ -19,3 +19,9 @@ Hot Reload SE Project Express uses nodemon to enable hot reloading, or the abili
 # Plans for Improvement
 
 The eventual goal is to create a server with an API and user authorization. It's also be great to add additional clarity in server responses so the user is especially clear on what the probilem is and what their next steps are.
+
+# Domain Name
+
+saumya.jumpingcrab.com
+www.jumpingcrab.com
+api.jumpingcrab.com
