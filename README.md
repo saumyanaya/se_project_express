@@ -23,5 +23,5 @@ The eventual goal is to create a server with an API and user authorization. It's
 # Domain Name
 
 saumya.jumpingcrab.com
-www. saumya.jumpingcrab.com
+www.saumya.jumpingcrab.com
 api.saumya.jumpingcrab.com
