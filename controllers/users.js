@@ -1,8 +1,9 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
-const { OK } = require("../utils/errors");
-const { handleUserHttpError } = require("../utils/errorHandlers");
+const { BadRequestError } = require("../utils/BadRequestError");
+const { NotFoundError } = require("../utils/NotFoundError");
+const { UnauthorizedError } = require("../utils/UnauthorizedError");
 const { JWT_SECRET } = require("../utils/config");
 
 const createUser = (req, res, next) => {
@@ -13,10 +14,14 @@ const createUser = (req, res, next) => {
       .then((user) => {
         const userData = user.toObject();
         delete userData.password;
-        res.status(OK).send({ userData });
+        res.status(200).send({ userData });
       })
       .catch((err) => {
-        handleUserHttpError(req, res, next(err));
+        if (err.name === `ValidationError`) {
+          next(new BadRequestError("Invalid data"));
+        } else {
+          next(err);
+        }
       }),
   );
 };
@@ -29,7 +34,11 @@ const getUser = (req, res, next) => {
       res.send({ user });
     })
     .catch((err) => {
-      handleUserHttpError(req, res, next(err));
+      if (err.name === "DocumentNotFoundError") {
+        next(new NotFoundError("User not found"));
+      } else {
+        next(err);
+      }
     });
 };
 
@@ -42,7 +51,11 @@ const loginUser = (req, res, next) => {
       res.send({ token });
     })
     .catch((err) => {
-      handleUserHttpError(req, res, next(err));
+      if (err.message === "Incorrect email or password") {
+        next(new UnauthorizedError("Invalid login"));
+      } else {
+        next(err);
+      }
     });
 };
 
@@ -59,7 +72,13 @@ const updateUser = (req, res, next) => {
       res.send({ user });
     })
     .catch((err) => {
-      handleUserHttpError(req, res, next(err));
+      if (err.name === "ValidationError") {
+        next(new BadRequestError("Invalid data"));
+      } else if (err.name === "DocumentNotFoundError") {
+        next(new NotFoundError("User not found"));
+      } else {
+        next(err);
+      }
     });
 };
 

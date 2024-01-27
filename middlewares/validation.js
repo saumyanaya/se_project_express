@@ -15,7 +15,7 @@ module.exports.validateCreateItem = celebrate({
       "string.max": 'The maximum length of the "name" field is 30',
       "string.empty": 'The "name" field must be filled in',
     }),
-    // weather: Joi.string().valid("hot", "warm", "cold").required(),
+    weather: Joi.string().valid("hot", "warm", "cold").required(),
     imageUrl: Joi.string().required().custom(validateUrl).messages({
       "string.empty": 'The "imageUrl" field must be filled in',
       "string.uri": 'the "imageUrl" field must be a valid url',
@@ -58,12 +58,6 @@ module.exports.validateAuth = celebrate({
 
 module.exports.validateId = celebrate({
   params: Joi.object().keys({
-    userId: Joi.string()
-      .length(24)
-      .regex(/^[A-Fa-f0-9]{24}$/)
-      .messages({
-        "string.length": `The "id" field is not a valid length`,
-      }),
     itemId: Joi.string()
       .length(24)
       .regex(/^[A-Fa-f0-9]{24}$/)
