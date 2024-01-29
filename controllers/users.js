@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const { ConflictError } = require("../utils/ConflictError");
 const { BadRequestError } = require("../utils/BadRequestError");
 const { NotFoundError } = require("../utils/NotFoundError");
 const { UnauthorizedError } = require("../utils/UnauthorizedError");
@@ -17,8 +18,10 @@ const createUser = (req, res, next) => {
         res.status(200).send({ userData });
       })
       .catch((err) => {
-        if (err.name === `ValidationError`) {
-          next(new BadRequestError("Invalid data"));
+        if (err.name === "ValidationError") {
+          next(new BadRequestError(err.message));
+        } else if (err.code === 11000) {
+          next(new ConflictError("Duplicate Email error"));
         } else {
           next(err);
         }
