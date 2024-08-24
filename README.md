@@ -1,14 +1,18 @@
-# WTWR (What to Wear?): Back End
+## WTWR (What to Wear?): Back End
+The back-end project is focused on creating a server for the WTWR application. The eventual goal is to create a server with an API and user authorization.
 
-Here are the technologies that are used to make up the application
+## Technologies used:
+Express: Express.js or simply Express is a back end web application framawork for building RESTful APIs with Node.js
 
-Express JS Express.js is responsible for creating the sever, creating routes, listening for http requests, & then routing those requests appropriately.
+NodeJs: Node. js is a single-threaded, open-source, cross-platform runtime environment for building fast and scalable server-side and networking applications
 
-Database & Mapper MongoDB is used in conjunction with a mapper called Mongoose that's used to interact with MongoDB since Javascript is incapable of interacting with documents on its own. In this app Mongoose is used to define the shape of the documents that get stored in MongoDB via Mongoose.Schema(). Models in Mongoose are used to create, cast, store, delete, & query data.
+Mongoose: Mongoose is a MongoDB ODM i.e (Object database Modelling) that used to translate the code and its representation from MongoDB to the Node. js server
 
-Validation Validator.js is used to verify that certain properties in the schemas, avatar & imageUrl, are valid URLs. A 400 status code is sent if either of the two aren't legitimate with the message 'You must enter a valid URL'
+REST API: A REST API is an API that conforms to the design principles of the REST, or representational state transfer architectural style.
 
-Hot Reload SE Project Express uses nodemon to enable hot reloading, or the ability for the server to refresh itself whenever source code is changed.
+Postman: Postman is an API Platform for developers to design, build, test and iterate their APIs. ESLint : ESLint is a static code analysis tool for identifying problematic patterns found in JavaScript code.
+
+MongoDB Compass: MongoDB Compass is a powerful GUI for querying, aggregating, and analyzing your MongoDB data in a visual environment.
 
 ## Running the Project
 
@@ -20,8 +24,10 @@ Hot Reload SE Project Express uses nodemon to enable hot reloading, or the abili
 
 The eventual goal is to create a server with an API and user authorization. It's also be great to add additional clarity in server responses so the user is especially clear on what the probilem is and what their next steps are.
 
-# Domain Name
+## Temporary Access
 
-saumya.jumpingcrab.com
-www.saumya.jumpingcrab.com
-api.saumya.jumpingcrab.com
+**Note:** The official domain is currently down. You can view the Project Demo-[https://www.youtube.com/watch?v=lqP8H05-D2U] 
+Repo Backened (https://saumyanaya.github.io/se_project_express/) 
+Repo Frontend (https://saumyanaya.github.io/se_project_react/) using this temporary link.
+
+
