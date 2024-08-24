@@ -26,10 +26,8 @@ The eventual goal is to create a server with an API and user authorization. It's
 
 ## Temporary Access
 
-**Note:** The official domain is currently down. You can view the 
+**Note:** The official domain is currently down. You can view the using this temporary link.
 ## Project Demo-[https://www.youtube.com/watch?v=lqP8H05-D2U] 
 ## Repo Backened (https://saumyanaya.github.io/se_project_express/) 
 ## Repo Frontend (https://saumyanaya.github.io/se_project_react/) 
-using this temporary link.
-
 
